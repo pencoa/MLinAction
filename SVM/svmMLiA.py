@@ -77,7 +77,7 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
     return b, alphas
 
 class optStruct:
-    def __init__(self, dataMatIn, classLabels, C, toler):
+    def __init__(self, dataMatIn, classLabels, C, toler, kTup):
         self.X = dataMatIn
         self.labelMat = classLabels
         self.C = C
@@ -86,10 +86,15 @@ class optStruct:
         self.alphas = mat(zeros((self.m, 1)))
         self.b = 0
         self.eCache = mat(zeros((self.m, 2)))
+        self.K = mat(zeros((self.m, self.m)))
+        for i in range(self.m):
+            self.K[:,i] = kernelTrans(self.X, self.X[i,:], kTup)
+
 
 def calcEk(oS, k):
-    fXk = float(multiply(oS.alphas, oS.labelMat).T *\
-                (oS.X*oS.X[k,:].T)) + oS.b
+    # fXk = float(multiply(oS.alphas, oS.labelMat).T *\
+    #             (oS.X*oS.X[k,:].T)) + oS.b
+    fXk = float(multiply(oS.alphas, oS.labelMat).T*oS.K[:,k] + oS.b)
     Ek = fXk - float(oS.labelMat[k])
     return Ek
 
@@ -127,8 +132,9 @@ def innerL(i, oS):
             L = max(0, oS.alphas[j] + oS.alphas[i] - oS.C)
             H = min(oS.C, oS.alphas[j] + oS.alphas[i])
         if L==H: print("L==H"); return 0
-        eta = 2.0 * oS.X[i,:]*oS.X[j,:].T - oS.X[i,:]*oS.X[i,:].T - \
-                 oS.X[j,:]*oS.X[j,:].T
+        # eta = 2.0 * oS.X[i,:]*oS.X[j,:].T - oS.X[i,:]*oS.X[i,:].T - \
+        #          oS.X[j,:]*oS.X[j,:].T
+        eta = 2.0 * oS.K[i,j] - oS.K[i,i] - oS.K[j,j]
         if eta >= 0: print("eta>=0"); return 0
         oS.alphas[j] -= oS.labelMat[j]*(Ei - Ej)/eta
         oS.alphas[j] = clipAlpha(oS.alphas[j], H, L)
@@ -138,12 +144,16 @@ def innerL(i, oS):
         oS.alphas[i] += oS.labelMat[j]*oS.labelMat[i]* \
                     (alphaJold - oS.alphas[j])
         updateEk(oS, i)
-        b1 = oS.b - Ei - oS.labelMat[i]*(oS.alphas[i] - alphaIold)*\
-             oS.X[i,:]*oS.X[i,:].T - oS.labelMat[j]*\
-             (oS.alphas[j] - alphaJold)*oS.X[i,:]*oS.X[j,:].T
-        b2 = oS.b - Ej - oS.labelMat[i]*(oS.alphas[i] - alphaIold)*\
-             oS.X[i,:]*oS.X[j,:].T - oS.labelMat[j]*\
-             (oS.alphas[j] - alphaJold)*oS.X[j,:]*oS.X[j,:].T
+        # b1 = oS.b - Ei - oS.labelMat[i]*(oS.alphas[i] - alphaIold)*\
+        #      oS.X[i,:]*oS.X[i,:].T - oS.labelMat[j]*\
+        #      (oS.alphas[j] - alphaJold)*oS.X[i,:]*oS.X[j,:].T
+        b1 = oS.b - Ei - oS.labelMat[i]*(oS.alphas[i] - alphaIold)*oS.K[i,i] -\
+                            oS.labelMat[j]*(oS.alphas[j] - alphaJold)*oS.K[i,j]
+        # b2 = oS.b - Ej - oS.labelMat[i]*(oS.alphas[i] - alphaIold)*\
+        #      oS.X[i,:]*oS.X[j,:].T - oS.labelMat[j]*\
+        #      (oS.alphas[j] - alphaJold)*oS.X[j,:]*oS.X[j,:].T
+        b2 = oS.b - Ej - oS.labelMat[i]*(oS.alphas[i] - alphaIold)*oS.K[i,j] -\
+                            oS.labelMat[j]*(oS.alphas[j] - alphaJold)*oS.K[j,j]
         if (0 < oS.alphas[i]) and (oS.C > oS.alphas[i]): oS.b = b1
         elif (0 < oS.alphas[j]) and (oS.C > oS.alphas[j]): oS.b = b2
         else: oS.b = (b1 + b2)/2.0
@@ -181,3 +191,16 @@ def calcWs(alphas, dataArr, classLabels):
     for i in range(m):
         w += multiply(alphas[i]*labelMat[i],X[i,:].T)
     return w
+
+def kernelTrans(X, A, kTup):
+    m, n = shape(X)
+    K = mat(zeros((m, 1)))
+    if kTup[0] == 'lin': K = X * A.T
+    elif kTup[0] == 'rbf':
+        for j in range(m):
+            deltaRow = X[j,:] - A
+            K[j] = deltaRow*deltaRow.T
+        K = exp(K / (-1*kTup[1]**2))
+    else: raise NameError('Houtston We Have a Problem -- \
+    That Kernel is not recognized')
+    return K
