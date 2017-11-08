@@ -42,7 +42,7 @@ def buildStump(dataArr, classLabels, D):
                     bestStump['ineq'] = inequal
     return bestStump, minError, bestClasEst
 
-def adaboostTrainDS(dataArr, classLabels, numIt=40):
+def adaBoostTrainDS(dataArr, classLabels, numIt=40):
     weakClassArr = []
     m = shape(dataArr)[0]
     D = mat(ones((m, 1))/m)
@@ -76,3 +76,16 @@ def adaClassify(datToClass, classifierArr):
         aggClassEst += classifierArr[i]['alpha']*classEst
         print(aggClassEst)
     return sign(aggClassEst)
+
+def loadDataSet(fileName):
+    numFeat = len(open(fileName).readline().split('\t'))
+    dataMat = []; labelMat = []
+    fr = open(fileName)
+    for line in fr.readlines():
+        lineArr = []
+        curLine = line.strip().split('\t')
+        for i in range(numFeat-1):
+            lineArr.append(float(curLine[i]))
+        dataMat.append(lineArr)
+        labelMat.append(float(curLine[-1]))
+    return dataMat, labelMat
