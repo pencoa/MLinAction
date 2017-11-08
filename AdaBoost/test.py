@@ -5,4 +5,5 @@ from numpy import *
 dataMat, classLabels = adaboost.loadSimData()
 # D = mat(ones((5, 1))/5)
 # adaboost.buildStump(dataMat, classLabels, D)
-classifierArray = adaboost.adaboostTrainDS(dataMat, classLabels, 9)
+classifierArray = adaboost.adaboostTrainDS(dataMat, classLabels, 30)
+aa = adaboost.adaClassify([[5, 5], [0, 0]], classifierArray)
