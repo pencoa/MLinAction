@@ -96,7 +96,7 @@ def plotROC(predStrengths, classLabels):
     ySum = 0.0
     numPosClas = sum(array(classLabels)==1.0)
     yStep = 1/float(numPosClas)
-    xStep = 1/float(len(classLabels)-numPosClas)
+    xStep = 1/float(len(classLabels)-numPosClas)               # ?
     sortedIndicies = predStrengths.argsort()
     fig = plt.figure()
     fig.clf()
@@ -107,7 +107,7 @@ def plotROC(predStrengths, classLabels):
         else:
             delX = xStep; delY = 0
             ySum += cur[1]
-        ax.plot([cur[0], cur[0]-delX], [cur[1], cur[1]-delY], c='b')
+        ax.plot([cur[0], cur[0]-delX], [cur[1], cur[1]-delY], c='b')               # ?
         cur = (cur[0]-delX, cur[1]-delY)
     ax.plot([0, 1], [0, 1], 'b--')
     plt.xlabel('False Positive Rate'); plt.ylabel('True Positive Rate')

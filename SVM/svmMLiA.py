@@ -37,7 +37,7 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
                ((labelMat[i]*Ei > toler) and (alphas[i] > 0)):
                 j = selectJrand(i, m)
                 fXj = float(multiply(alphas, labelMat).T*\
-                            (dataMatrix*dataMatrix[j,:].T)) + b
+                            (dataMatrix*dataMatrix[j,:].T)) + b               # ?
                 Ej = fXj - float(labelMat[j])
                 alphaIold = alphas[i].copy()
                 alphaJold = alphas[j].copy()
@@ -61,7 +61,7 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
                 b1 = b - Ei - labelMat[i]*(alphas[i] - alphaIold)*\
                      dataMatrix[i,:]*dataMatrix[i,:].T - \
                      labelMat[j]*(alphas[j] - alphaJold)*\
-                     dataMatrix[i,:]*dataMatrix[j,:].T
+                     dataMatrix[i,:]*dataMatrix[j,:].T                  # ?
                 b2 = b - Ej - labelMat[i]*(alphas[i] - alphaIold)*\
                      dataMatrix[i,:]*dataMatrix[j,:].T - \
                      labelMat[j]*(alphas[j] - alphaJold)*\
