@@ -41,3 +41,11 @@ import matplotlib.pyplot as plt
 # yHat10 = regression.lwlrTest(abX[0:99], abX[0:99], abY[0:99], 10)
 #
 # regression.rssError(abY[0:99], yHat01.T)
+
+abX, abY = regression.loadDataSet('./abalone.txt')
+ridgeWeights = regression.ridgeTest(abX, abY)
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(ridgeWeights)
+plt.show()
