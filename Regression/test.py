@@ -4,7 +4,7 @@ import regression
 from numpy import *
 import matplotlib.pyplot as plt
 
-xArr, yArr = regression.loadDataSet('./ex0.txt')
+# xArr, yArr = regression.loadDataSet('./ex0.txt')
 # xArr[0:2]
 # ws = regression.standRegres(xArr, yArr)
 # xMat = mat(xArr)
@@ -24,13 +24,20 @@ xArr, yArr = regression.loadDataSet('./ex0.txt')
 # yHat = xMat*ws
 # corrcoef(yHat.T, yMat)
 
-yHat = regression.lwlrTest(xArr, xArr, yArr, 0.01)
-xMat = mat(xArr)
-srtInd = xMat[:,1].argsort(0)
-xSort = xMat[srtInd][:,0,:]
+# yHat = regression.lwlrTest(xArr, xArr, yArr, 0.01)
+# xMat = mat(xArr)
+# srtInd = xMat[:,1].argsort(0)
+# xSort = xMat[srtInd][:,0,:]
+#
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# ax.plot(xSort[:,1], yHat[srtInd])
+# ax.scatter(xMat[:,1].flatten().A[0], mat(yArr).T.flatten().A[0], s=2, c='red')
+# plt.show()
 
-fig = plt.figure()
-ax = fig.add_subplot(111)
-ax.plot(xSort[:,1], yHat[srtInd])
-ax.scatter(xMat[:,1].flatten().A[0], mat(yArr).T.flatten().A[0], s=2, c='red')
-plt.show()
+# abX, abY = regression.loadDataSet('./abalone.txt')
+# yHat01 = regression.lwlrTest(abX[0:99], abX[0:99], abY[0:99], 0.1)
+# yHat1 = regression.lwlrTest(abX[0:99], abX[0:99], abY[0:99], 1)
+# yHat10 = regression.lwlrTest(abX[0:99], abX[0:99], abY[0:99], 10)
+#
+# regression.rssError(abY[0:99], yHat01.T)
