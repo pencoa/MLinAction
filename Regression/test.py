@@ -42,10 +42,13 @@ import matplotlib.pyplot as plt
 #
 # regression.rssError(abY[0:99], yHat01.T)
 
-abX, abY = regression.loadDataSet('./abalone.txt')
-ridgeWeights = regression.ridgeTest(abX, abY)
+# abX, abY = regression.loadDataSet('./abalone.txt')
+# ridgeWeights = regression.ridgeTest(abX, abY)
+#
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# ax.plot(ridgeWeights)
+# plt.show()
 
-fig = plt.figure()
-ax = fig.add_subplot(111)
-ax.plot(ridgeWeights)
-plt.show()
+xArr, yArr = regression.loadDataSet('./abalone.txt')
+regression.stageWise(xArr, yArr, 0.01, 200)
