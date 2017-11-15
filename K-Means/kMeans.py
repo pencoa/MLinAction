@@ -55,7 +55,7 @@ def biKmeans(dataSet, k, distMeas=distEclud):
             ptsInCurrCluster = dataSet[nonzero(clusterAssment[:,0].A==i)[0],:]#get the data points currently in cluster i
             centroidMat, splitClustAss = kMeans(ptsInCurrCluster, 2, distMeas)
             sseSplit = sum(splitClustAss[:,1])#compare the SSE to the currrent minimum
-            sseNotSplit = sum(clusterAssment[nonzero(clusterAssment[:,0].A!=i)[0],1])
+            sseNotSplit = sum(clusterAssment[nonzero(clusterAssment[:,0].A!=i)[0],1])   # ?
             print("sseSplit, and notSplit: ",sseSplit,sseNotSplit)
             if (sseSplit + sseNotSplit) < lowestSSE:
                 bestCentToSplit = i
